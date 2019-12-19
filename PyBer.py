@@ -421,3 +421,25 @@ plt.savefig("analysis/Fig6.png")
 plt.show()
 
 # %%
+# Calculate the percentage of drivers for each city type.
+driver_percents = 100 * pyber_data_df.groupby(["type"]).sum()["driver_count"] / pyber_data_df["driver_count"].sum()
+driver_percents
+
+# %%
+# Build percentage of rides by city type pie chart.
+plt.subplots(figsize=(10, 6))
+plt.pie(driver_percents,
+    labels=["Rural", "Suburban", "Urban"],
+    colors=["gold", "lightskyblue", "lightcoral"],
+    explode=[0, 0, 0.1],
+    autopct='%1.1f%%',
+    shadow=True, startangle=165)
+plt.title("% of Total Rides by City Type")
+# Change the default font size from 10 to 14.
+mpl.rcParams['font.size'] = 14
+# Save Figure
+plt.savefig("analysis/Fig7.png")
+# Show Figure
+plt.show()
+
+# %%
