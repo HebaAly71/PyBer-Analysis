@@ -366,3 +366,37 @@ ax.grid()
 plt.savefig("analysis/Fig4.png")
 plt.show()
 # %%
+# Get the sum of the fares for each city type.
+sum_fares_by_type = pyber_data_df.groupby(["type"]).sum()["fare"]
+sum_fares_by_type
+
+# %%
+# Get the sum of all the fares.
+total_fares = pyber_data_df["fare"].sum()
+total_fares
+
+# %%
+# Calculate the percentage of fare for each city type.
+type_percents = 100 * sum_fares_by_type / total_fares
+type_percents
+
+# %%
+# Import mpl to change the plot configurations using rcParams.
+import matplotlib as mpl
+# Build Pie Chart
+plt.subplots(figsize=(10, 6))
+plt.pie(type_percents,
+    labels=["Rural", "Suburban", "Urban"],
+    colors=["gold", "lightskyblue", "lightcoral"],
+    explode=[0, 0, 0.1],
+    autopct='%1.1f%%',
+    shadow=True, startangle=150)
+plt.title("% of Total Fares by City Type")
+# Change the default font size from 10 to 14.
+mpl.rcParams['font.size'] = 14
+# Save Figure
+plt.savefig("analysis/Fig5.png")
+# Show Figure
+plt.show()
+
+# %%
