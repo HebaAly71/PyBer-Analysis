@@ -23,6 +23,7 @@ ride_data_df.head(10)
 # %%
 # Get the columns and the rows that are not null.
 city_data_df.count()
+
 # %%
 # Get the data types of each column.
 city_data_df.dtypes
@@ -48,38 +49,51 @@ ride_data_df.dtypes
 
 # %%
 # Combine the data into a single dataset
-pyber_data_df = pd.merge(ride_data_df, city_data_df, how="left", on=["city", "city"])
+pyber_data_df = pd.merge(ride_data_df, city_data_df, how="left", on=["city", "city"]).drop_duplicates()
 
+# %%
+pyber_data_df = pyber_data_df.drop_duplicates()
+# %%
 # Display the DataFrame
 pyber_data_df.head()
 
 # %%
 # Part 1 
-#Calculate the total fares and driver count by city type
+#Calculate the total fares by city type
 pyber_groupbycitytype=pyber_data_df.groupby('type')
-pyber_groupbycitytype_total=pyber_groupbycitytype['fare','driver_count'].sum() 
+pyber_groupbycitytype_fare=pyber_groupbycitytype['fare'].sum()
+
+# %%
+# %%
+# Calculate the total driver by citytype
+total_driver_citytype = city_data_df.groupby(['type'])['driver_count'].sum()
+# %%
+#Calculate the total rides by city type
+pyber_groupbycitytype_ride=pyber_groupbycitytype['ride_id'].count()
+# %%
+# Add the total rides series into the pybergroupcitytype_total dataframe
+pyber_groupbycitytype_total = pd.DataFrame(pyber_groupbycitytype_ride)
 pyber_groupbycitytype_total
 
 # %%
-#Calculate the total rides by city type
-pyber_groupbycitytype_count=pyber_groupbycitytype['ride_id'].count()
+# Add total drivers and fares to the summary table
+pyber_groupbycitytype_total['Total Drivers'] =  total_driver_citytype
+pyber_groupbycitytype_total['Total Fare'] =  pyber_groupbycitytype_fare
 # %%
-# Add the total rides series into the pybergroupcitytype_total dataframe
-pyber_groupbycitytype_total['Total Rides'] =  pyber_groupbycitytype_count
 pyber_groupbycitytype_total
 # %%
 # Calculate the average fare per ride
-Avg_fare_per_ride = pyber_groupbycitytype_total['fare'] / pyber_groupbycitytype_total['Total Rides']
+Avg_fare_per_ride = pyber_groupbycitytype_total['Total Fare'] / pyber_groupbycitytype_total['ride_id']
 Avg_fare_per_ride
 
 # %%
 # Calculate the average driver per ride
-Avg_driver_per_ride = pyber_groupbycitytype_total['driver_count'] / pyber_groupbycitytype_total['Total Rides']
+Avg_driver_per_ride = pyber_groupbycitytype_total['Total Drivers'] / pyber_groupbycitytype_total['ride_id']
 Avg_driver_per_ride
 
 # %%
 # Calculate the average fare per driver
-Avg_fare_per_driver = pyber_groupbycitytype_total['fare'] / pyber_groupbycitytype_total['driver_count']
+Avg_fare_per_driver = pyber_groupbycitytype_total['Total Fare'] / pyber_groupbycitytype_total['Total Drivers']
 Avg_fare_per_driver
 
 # %%
@@ -96,12 +110,12 @@ pyber_groupbycitytype_total['Average Fare per Ride'] = pyber_groupbycitytype_tot
 pyber_groupbycitytype_total['Average Fare per Driver'] = pyber_groupbycitytype_total['Average Fare per Driver'].map("${:,.2f}".format)
 # %%
 # Fromatting total fare
-pyber_groupbycitytype_total['fare'] = pyber_groupbycitytype_total['fare'].map("${:,.2f}".format)
+pyber_groupbycitytype_total['Total Fare'] = pyber_groupbycitytype_total['Total Fare'].map("${:,.2f}".format)
 
 
 # %%
 #Rename the summary table column name
-pyber_groupbycitytype_total = pyber_groupbycitytype_total.rename(columns={"driver_count":"Total Drivers", "fare":"Total Fares"})
+pyber_groupbycitytype_total = pyber_groupbycitytype_total.rename(columns={"ride_id":"Total Rides"})
 
 # %%
 # Delete Index name
@@ -117,7 +131,7 @@ pyber_data_df = pyber_data_df.rename(columns={'city': 'City', 'date':'Date','far
 
 # %%
 # Set index to Date
-pyber_data_df.set_index('Date')
+pyber_data_df_new = pyber_data_df.set_index('Date')
 # %%
 # Copy The dataframe and create a fare dataframe
 pyber_data_fare_df = pyber_data_df[['Date', 'City Type', 'Fare']].copy()
