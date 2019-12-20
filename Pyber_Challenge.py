@@ -138,25 +138,21 @@ pyber_data_fare_df = pyber_data_df_new[['City Type', 'Fare']].copy()
 #pyber_data_fare_df = pyber_data_df[['Date', 'City Type', 'Fare']].copy()
 # %%
 pyber_data_fare_df
-
-# %%
-# Set index to Date
-#pyber_data_fare_df_new = pyber_data_fare_df.set_index('Date')
 # %%
 # Set index datetime data type
-pyber_data_fare_df_new.index = pyber_data_fare_df_new.index.astype('datetime64[ns]')
+pyber_data_fare_df.index = pyber_data_fare_df.index.astype('datetime64[ns]')
 
 # %%
 # Make sure the index data type is date time
-pyber_data_fare_df_new.info()
+pyber_data_fare_df.info()
 
 # %%
 # Show the fare table
-pyber_data_fare_df_new
+pyber_data_fare_df
 
 # %%
 #Calculate the sum of fares by the type of city and date 
-pyber_groupby_city_date_fare = pyber_data_fare_df_new.groupby(['Date','City Type'])['Fare'].sum()
+pyber_groupby_city_date_fare = pyber_data_fare_df.groupby(['Date','City Type'])['Fare'].sum()
 # %%
 pyber_groupby_city_date_fare
 # %%
@@ -169,9 +165,6 @@ pyber_groupby_city_date_fare_df
 pyber_groupby_city_date_fare_df_new = pyber_groupby_city_date_fare_df.reset_index()
 
 # %%
-#pyber_groupby_city_date_fare_df_new
-pyber_groupby_city_date_fare_df.resample('W')
-# %%
 #Create a pivot table from the previous dataframe
 pyber_pivottable_1 = pd.pivot_table(pyber_groupby_city_date_fare_df_new, values ='Fare', index=['Date'], columns = ['City Type'])
 # %%
@@ -180,14 +173,10 @@ pyber_pivottable_1_df = pyber_pivottable_1.loc['2019-01-01':'2019-04-28']
 # %%
 pyber_pivottable_1_df
 # %%
-# %%
 pyber_pivottable_1_df.index = pyber_pivottable_1_df.index.astype('datetime64[ns]')
-#pyber_data_fare_df_new.index.astype('datetime64[ns]')
-
 # %%
 # Create Weekly bins
 weekly_df = pyber_pivottable_1_df.resample('W').sum()
-
 # %%
 # Weekly Fare by City type Table
 weekly_df
@@ -208,6 +197,3 @@ plt.legend(loc='center')
 #Save and Show plot
 plt.savefig("Challenge_figures/Fig_challenge.png")
 plt.show()
-
-
-# %%
