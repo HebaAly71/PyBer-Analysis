@@ -119,7 +119,25 @@ pyber_data_df = pyber_data_df.rename(columns={'city': 'City', 'date':'Date','far
 # Set index to Date
 pyber_data_df.set_index('Date')
 # %%
-# Merged Dataframe of data
-# pyber_data_df
-# %%
+# Copy The dataframe and create a fare dataframe
+pyber_data_fare_df = pyber_data_df[['Date', 'City Type', 'Fare']].copy()
+pyber_data_fare_df
 
+# %%
+# Set index to Date
+pyber_data_fare_df_new = pyber_data_fare_df.set_index('Date')
+
+# %%
+type(pyber_data_fare_df_new.index)
+# %%
+# Set index datetime data type
+pyber_data_fare_df_new.index.astype('datetime64[ns]')
+
+# %%
+# Make sure the index data type is date time
+pyber_data_fare_df_new.info()
+
+# %%
+pyber_data_fare_df_new
+
+# %%
