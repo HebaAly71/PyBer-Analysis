@@ -54,6 +54,7 @@ pyber_data_df = pd.merge(ride_data_df, city_data_df, how="left", on=["city", "ci
 pyber_data_df.head()
 
 # %%
+# Part 1 
 #Calculate the total fares and driver count by city type
 pyber_groupbycitytype=pyber_data_df.groupby('type')
 pyber_groupbycitytype_total=pyber_groupbycitytype['fare','driver_count'].sum() 
@@ -97,9 +98,11 @@ pyber_groupbycitytype_total['Average Fare per Driver'] = pyber_groupbycitytype_t
 # Fromatting total fare
 pyber_groupbycitytype_total['fare'] = pyber_groupbycitytype_total['fare'].map("${:,.2f}".format)
 
+
 # %%
 #Rename the summary table column name
-pyber_groupbycitytype_total.rename(columns={"driver_count":"Total Drivers", "fare":"Total Fares"})
+pyber_groupbycitytype_total = pyber_groupbycitytype_total.rename(columns={"driver_count":"Total Drivers", "fare":"Total Fares"})
+
 # %%
 # Delete Index name
 del pyber_groupbycitytype_total.index.name
@@ -107,4 +110,16 @@ del pyber_groupbycitytype_total.index.name
 # Summary Table by City Type
 pyber_groupbycitytype_total
 
-# %%git
+# %%
+# Part 2
+# Rename column in the merged Dataframe
+pyber_data_df = pyber_data_df.rename(columns={'city': 'City', 'date':'Date','fare':'Fare', 'ride_id': 'Ride Id','driver_count': 'No. Drivers', 'type':'City Type'})
+
+# %%
+# Set index to Date
+pyber_data_df.set_index('Date')
+# %%
+# Merged Dataframe of data
+# pyber_data_df
+# %%
+
