@@ -142,9 +142,6 @@ pyber_data_fare_df
 # %%
 # Set index to Date
 #pyber_data_fare_df_new = pyber_data_fare_df.set_index('Date')
-
-# %%
-type(pyber_data_fare_df_new.index)
 # %%
 # Set index datetime data type
 pyber_data_fare_df_new.index = pyber_data_fare_df_new.index.astype('datetime64[ns]')
@@ -166,9 +163,7 @@ pyber_groupby_city_date_fare
 # Create a dataframe with the sum of fares by city type and date
 pyber_groupby_city_date_fare_df = pd.DataFrame(pyber_groupby_city_date_fare)
 pyber_groupby_city_date_fare_df
-# %%
-print(pyber_groupby_city_date_fare_df.index)
-#pyber_groupby_city_date_fare_df.index.astype('datetime64[ns]', copy=True)
+
 # %%
 #Reset index
 pyber_groupby_city_date_fare_df_new = pyber_groupby_city_date_fare_df.reset_index()
@@ -179,50 +174,40 @@ pyber_groupby_city_date_fare_df.resample('W')
 # %%
 #Create a pivot table from the previous dataframe
 pyber_pivottable_1 = pd.pivot_table(pyber_groupby_city_date_fare_df_new, values ='Fare', index=['Date'], columns = ['City Type'])
-#table = pd.pivot_table(df, values='D', index=['A', 'B'],columns=['C'], aggfunc=np.sum)
-# %%
-#print(pyber_groupby_city_date_fare_df.pivot_table(index='Date', columns='City Type', values='Fare'))
-type(pyber_groupby_city_date_fare_df.pivot_table(index='Date', columns='City Type', values='Fare').index)
-#pyber_pivottable_1.info()
-#pyber_pivottable_1.resample('W')
-# %%
-pyber_pivottable_1.index.astype('datetime64[ns]', copy=True)
 # %%
 # Creating dataframe with given dates from the pivot table created above
 pyber_pivottable_1_df = pyber_pivottable_1.loc['2019-01-01':'2019-04-28']
-
 # %%
 pyber_pivottable_1_df
 # %%
-type(pyber_pivottable_1.index)
-# %%
-#pyber_pivottable_1.set_index('Date',inplace=True)
-# %%
-print(pyber_pivottable_1_df.index)
 # %%
 pyber_pivottable_1_df.index = pyber_pivottable_1_df.index.astype('datetime64[ns]')
 #pyber_data_fare_df_new.index.astype('datetime64[ns]')
 
 # %%
-print(pyber_pivottable_1_df.index)
-# %%
+# Create Weekly bins
 weekly_df = pyber_pivottable_1_df.resample('W').sum()
-#df2.resample('D', level=0).sum()
-#ts.resample('D').interpolate()[::7]
 
 # %%
+# Weekly Fare by City type Table
 weekly_df
 
 # %% 
-# Fivethirty Graph
+# Fivethirtyeight Graph
 plt.style.use('fivethirtyeight')
-
 # %%
-#Create the plot with ax.plt()
-#fig, ax = weekly_df.plot()
+#Create the plot 
+plt.figure(figsize=(10, 12))
 weekly_df.plot()
-#plt.xticks(weekly_df[''], weekly_df.index.values )
-ax.set_title("Total Fare by City Type")
+#Set up titles, x and y axise labels
+plt.title("Total Fare by City Type")
+plt.ylabel('Fare($USD)',fontsize=14)
+plt.xlabel("Month",fontsize=14)
+# Create Legend and Setup it location
+plt.legend(loc='center')
+#Save and Show plot
+plt.savefig("Challenge_figures/Fig_challenge.png")
 plt.show()
+
 
 # %%
