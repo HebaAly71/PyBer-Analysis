@@ -134,7 +134,9 @@ pyber_data_df = pyber_data_df.rename(columns={'city': 'City', 'date':'Date','far
 pyber_data_df_new = pyber_data_df.set_index('Date')
 # %%
 # Copy The dataframe and create a fare dataframe
-pyber_data_fare_df = pyber_data_df[['Date', 'City Type', 'Fare']].copy()
+pyber_data_fare_df = pyber_data_df_new[['City Type', 'Fare']].copy()
+#pyber_data_fare_df = pyber_data_df[['Date', 'City Type', 'Fare']].copy()
+# %%
 pyber_data_fare_df
 
 # %%
@@ -152,6 +154,34 @@ pyber_data_fare_df_new.index.astype('datetime64[ns]')
 pyber_data_fare_df_new.info()
 
 # %%
+# Show the fare table
 pyber_data_fare_df_new
+
+# %%
+#Calculate the sum of fares by the type of city and date 
+pyber_groupby_city_date_fare = pyber_data_fare_df_new.groupby(['Date','City Type'])['Fare'].sum()
+# %%
+# Create a dataframe with the sum of fares by city type and date
+pyber_groupby_city_date_fare_df = pd.DataFrame(pyber_groupby_city_date_fare)
+pyber_groupby_city_date_fare_df
+# %%
+#Reset index
+pyber_groupby_city_date_fare_df_new = pyber_groupby_city_date_fare_df.reset_index()
+# %%
+#pyber_groupby_city_date_fare_df_new
+
+# %%
+#Create a pivot table from the previous dataframe
+pyber_pivottable_1 = pd.pivot_table(pyber_groupby_city_date_fare_df_new, values = 'Fare', index=['Date'], columns = ['City Type'])
+#table = pd.pivot_table(df, values='D', index=['A', 'B'],columns=['C'], aggfunc=np.sum)
+# %%
+#pyber_pivottable_1
+
+# %%
+# Creating dataframe with given dates from the pivot table created above
+pyber_pivottable_1_df = pyber_pivottable_1.loc['2019-01-01':'2019-04-28']
+
+# %%
+pyber_pivottable_1_df
 
 # %%
